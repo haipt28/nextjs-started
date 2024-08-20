@@ -6,6 +6,11 @@ declare global {
       NEXT_PUBLIC_ACCESS_TOKEN_NAME: string;
       NEXT_PUBLIC_DOMAIN: string;
       NEXT_PUBLIC_BACKEND_DOMAIN: string;
+      KEYCLOAK_CLIENT_ID: string;
+      KEYCLOAK_REALM_ID: string;
+      KEYCLOAK_CLIENT_SECRET: string;
+      NEXTAUTH_SECRET: string;
+      KEYCLOAK_BASE_URL: string;
     }
   }
 }

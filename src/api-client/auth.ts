@@ -8,6 +8,7 @@ export const authApi = {
   logout(token: string) {
     return axiosClient.delete(`/logout/${token}`);
   },
+
   getProfile() {
     return axiosClient.get("/profile");
   },
