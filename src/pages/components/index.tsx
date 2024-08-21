@@ -1,8 +1,5 @@
-import { authApi } from "@/api-client";
-import { mockApi } from "@/api-client/jsonplaceholder";
 import { keyCloakApi } from "@/api-client/keycloak";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
 
 export interface IComponentsPageProps {}
 

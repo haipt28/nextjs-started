@@ -52,16 +52,10 @@ async function keycloakRefreshToken(
         keycloakUrlToRefreshToken,
         keycloakParamsToRefreshToken
       );
-      console.log("--------------------------------");
       console.log("Re-new token successfully");
-      console.log("--------------------------------");
-
       return response.json(keycloakRefreshTokenResponse.data);
     } catch (error) {
-      console.log("--------------------------------");
-      console.log("Re-new token failed:");
-      console.log("--------------------------------");
-
+      console.log("Re-new token failed");
       if (error instanceof AxiosError) {
         return response
           .status(error.response?.status || 401)

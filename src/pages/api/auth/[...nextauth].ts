@@ -4,8 +4,8 @@ import type { JWT } from "next-auth/jwt";
 import KeycloakProvider, {
   KeycloakProfile,
 } from "next-auth/providers/keycloak";
-import { OAuthConfig } from "next-auth/providers/oauth";
 import { IKeycloakRefreshTokenApiResponse } from "./keycloakRefreshToken";
+import { OAuthConfig } from "next-auth/providers/oauth";
 
 declare module "next-auth/jwt" {
   interface JWT {
@@ -22,7 +22,7 @@ declare module "next-auth/jwt" {
 async function refreshAccessToken(token: JWT) {
   try {
     const refreshedTokens = await axios.post<IKeycloakRefreshTokenApiResponse>(
-      process.env.NEXT_PUBLIC_DOMAIN + "/api/auth/keycloakRefreshToken",
+      process.env.NEXTAUTH_URL + "/api/auth/keycloakRefreshToken",
       {
         refreshToken: token?.refreshToken,
       }
@@ -32,7 +32,7 @@ async function refreshAccessToken(token: JWT) {
       throw refreshedTokens;
     }
 
-    return {
+    let result: any = {
       ...token,
       accessToken: refreshedTokens.data.access_token,
       accessTokenExpired: Date.now() + refreshedTokens.data.expires_in * 1000,
@@ -40,6 +40,8 @@ async function refreshAccessToken(token: JWT) {
       refreshTokenExpired:
         Date.now() + refreshedTokens.data.refresh_expires_in * 1000,
     };
+    delete result?.error;
+    return result;
   } catch (error) {
     return {
       ...token,
@@ -63,17 +65,7 @@ export const authOptions: AuthOptions = {
       return Promise.resolve(url.startsWith(baseUrl) ? url : baseUrl);
     },
     async signIn({ account, user }: any) {
-      // const instance = CookieStoreControl.getInstance();
       if (account && user) {
-        // const { access_token, expires_at } = account;
-        // const { refresh_token, refresh_expires_in } = account;
-        // const instance = CookieStoreControl.getInstance();
-
-        // instance.token.set_access_token(access_token, expires_at * 1000);
-        // instance.token.set_refresh_token(
-        //     refresh_token,
-        //     Date.now() + refresh_expires_in! * 1000
-        // );
         return true;
       } else {
         return false;
@@ -94,18 +86,6 @@ export const authOptions: AuthOptions = {
         token.id_token = account.id_token;
         token.provider = account.provider;
 
-        console.log("--------------------------------");
-        const time = new Date(Date.now() + account.refresh_expires_in! * 1000);
-        const year = time.getFullYear();
-        const month = time.getMonth() + 1;
-        const day = time.getDate();
-        const hour = time.getHours();
-        const minute = time.getMinutes();
-        const second = time.getSeconds();
-        const timeString = `${day}/${month}/${year} ${hour}:${minute}:${second}`;
-        console.log("refresh_token expires: ", timeString);
-        console.log("--------------------------------");
-
         return token;
       }
 
@@ -123,7 +103,6 @@ export const authOptions: AuthOptions = {
         session.error = token.error;
         session.accessToken = token.accessToken;
         session.refreshToken = token.refreshToken;
-        session.refreshTokenExpired = token.refreshTokenExpired;
       }
       return session;
     },
