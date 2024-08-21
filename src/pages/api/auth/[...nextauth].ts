@@ -1,12 +1,11 @@
 import axios from "axios";
 import NextAuth, { AuthOptions } from "next-auth";
 import type { JWT } from "next-auth/jwt";
-
 import KeycloakProvider, {
   KeycloakProfile,
 } from "next-auth/providers/keycloak";
-import { IKeycloakRefreshTokenApiResponse } from "./keycloakRefreshToken";
 import { OAuthConfig } from "next-auth/providers/oauth";
+import { IKeycloakRefreshTokenApiResponse } from "./keycloakRefreshToken";
 
 declare module "next-auth/jwt" {
   interface JWT {
@@ -42,12 +41,9 @@ async function refreshAccessToken(token: JWT) {
         Date.now() + refreshedTokens.data.refresh_expires_in * 1000,
     };
   } catch (error) {
-    // return {
-    //     ...token,
-    //     error: 'RefreshAccessTokenError',
-    // };
     return {
-      redirect: `${process.env.NEXT_PUBLIC_DOMAIN}/auth/login`,
+      ...token,
+      error: "RefreshAccessTokenError",
     };
   }
 }
@@ -98,6 +94,18 @@ export const authOptions: AuthOptions = {
         token.id_token = account.id_token;
         token.provider = account.provider;
 
+        console.log("--------------------------------");
+        const time = new Date(Date.now() + account.refresh_expires_in! * 1000);
+        const year = time.getFullYear();
+        const month = time.getMonth() + 1;
+        const day = time.getDate();
+        const hour = time.getHours();
+        const minute = time.getMinutes();
+        const second = time.getSeconds();
+        const timeString = `${day}/${month}/${year} ${hour}:${minute}:${second}`;
+        console.log("refresh_token expires: ", timeString);
+        console.log("--------------------------------");
+
         return token;
       }
 
@@ -115,6 +123,7 @@ export const authOptions: AuthOptions = {
         session.error = token.error;
         session.accessToken = token.accessToken;
         session.refreshToken = token.refreshToken;
+        session.refreshTokenExpired = token.refreshTokenExpired;
       }
       return session;
     },

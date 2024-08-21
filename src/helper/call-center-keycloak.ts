@@ -6,11 +6,11 @@ import axios, {
 import moment from "moment";
 import { getSession } from "next-auth/react";
 
-const axiosClient = axios.create({
-  baseURL: "/service/",
+const axiosKeycloak = axios.create({
+  baseURL: "/keycloak/",
 });
 
-axiosClient.interceptors.request.use(
+axiosKeycloak.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     const session: any = await getSession();
     console.log("session", session);
@@ -36,7 +36,7 @@ axiosClient.interceptors.request.use(
   }
 );
 
-axiosClient.interceptors.response.use(
+axiosKeycloak.interceptors.response.use(
   async (response: AxiosResponse) => {
     return response;
   },
@@ -46,4 +46,4 @@ axiosClient.interceptors.response.use(
   }
 );
 
-export default axiosClient;
+export default axiosKeycloak;

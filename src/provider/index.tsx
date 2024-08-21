@@ -16,18 +16,10 @@ export const GlobalProvider = (props: IGlobalProvider) => {
 
   const emotionCache = createCache({ key: "css" });
   return (
-    <SWRConfig
-      value={{
-        fetcher: (url: string) => axiosClient.get(url),
-        revalidateOnFocus: true,
-        revalidateOnReconnect: true,
-      }}
-    >
-      <Provider store={store}>
-        <CacheProvider value={emotionCache}>
-          <SnackbarProvider maxSnack={3}>{children}</SnackbarProvider>
-        </CacheProvider>
-      </Provider>
-    </SWRConfig>
+    <Provider store={store}>
+      <CacheProvider value={emotionCache}>
+        <SnackbarProvider maxSnack={3}>{children}</SnackbarProvider>
+      </CacheProvider>
+    </Provider>
   );
 };

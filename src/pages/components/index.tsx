@@ -1,11 +1,23 @@
 import { authApi } from "@/api-client";
+import { mockApi } from "@/api-client/jsonplaceholder";
+import { keyCloakApi } from "@/api-client/keycloak";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 export interface IComponentsPageProps {}
 
 export default function ComponentsPage(props: IComponentsPageProps) {
   const session: any = useSession();
   const userData = session.data?.user;
+
+  const getUser = async () => {
+    // await mockApi.getAlluser();
+    try {
+      await keyCloakApi.getProfile();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="w-screen h-screen bg-[#1e293b]">
@@ -15,6 +27,9 @@ export default function ComponentsPage(props: IComponentsPageProps) {
         </button>
         <button onClick={() => signOut()} color="error">
           Logout
+        </button>
+        <button onClick={getUser} color="error">
+          getUser
         </button>
       </div>
 
@@ -26,29 +41,26 @@ export default function ComponentsPage(props: IComponentsPageProps) {
               <span className="">{userData?.email ?? ""}</span>
             </p>
             <p>
-              <span className="font-semibold px-1">Username:</span>
-              <span className="">{userData?.preferred_username ?? ""}</span>
-            </p>
-            <p>
-              <span className="font-semibold px-1">First Name:</span>
-              <span className="">{userData?.given_name ?? ""}</span>
-            </p>
-            <p>
-              <span className="font-semibold px-1">Last Name:</span>
-              <span className="">{userData?.family_name ?? ""}</span>
-            </p>
-            <p>
-              <span className="font-semibold px-1 text-nowrap">
-                Access token:
-              </span>
-              <span className="break-all">{session.data.accessToken}</span>
+              <span className="font-semibold px-1">name:</span>
+              <span className="">{userData?.name ?? ""}</span>
             </p>
 
             <p>
               <span className="font-semibold px-1 text-nowrap">
+                Access token:
+              </span>
+              <span className="break-all  text-emerald-300">
+                {session.data.accessToken}
+              </span>
+            </p>
+
+            <p>
+              <span className="font-semibold px-1 text-nowrap  ">
                 Refresh token:
               </span>
-              <span className="break-all">{session.data.refreshToken}</span>
+              <span className="break-all text-emerald-300">
+                {session.data.refreshToken}
+              </span>
             </p>
           </div>
         ) : (
