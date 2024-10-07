@@ -1,9 +1,9 @@
+import { axiosInterceptors } from "@/utils";
 import axios, {
   AxiosError,
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios";
-import { getSession } from "next-auth/react";
 
 const axiosClient = axios.create({
   baseURL: "/service/",
@@ -11,26 +11,7 @@ const axiosClient = axios.create({
 
 axiosClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
-    const session: any = await getSession();
-
-    if (
-      session?.error === "RefreshAccessTokenError" &&
-      window &&
-      // not check home page ("/")
-      window.location.pathname !== "/"
-    ) {
-      const url = "/api/auth/signin";
-      window.location.replace(url);
-    }
-
-    if (session) {
-      const { accessToken } = session;
-
-      if (accessToken) {
-        config.headers.Authorization = "Bearer " + accessToken;
-      }
-    }
-    return config;
+    return axiosInterceptors(config);
   },
   (err: AxiosError) => {
     return Promise.reject(err);

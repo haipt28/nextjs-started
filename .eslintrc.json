@@ -1,3 +1,34 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": [
+    "next/core-web-vitals", // Mở rộng từ cấu hình của Next.js cho các yếu tố web chính
+    "eslint:recommended", // Sử dụng các quy tắc ESLint cơ bản được khuyến nghị
+    "plugin:@typescript-eslint/recommended", // Sử dụng các quy tắc khuyến nghị của @typescript-eslint
+    "plugin:react/recommended", // Sử dụng các quy tắc khuyến nghị của React
+    "plugin:@typescript-eslint/eslint-recommended"
+  ],
+  "plugins": [
+    "@typescript-eslint", // Plugin hỗ trợ TypeScript
+    "unused-imports" // Plugin hỗ trợ xử lý import không sử dụng
+  ],
+  "rules": {
+    "react-hooks/exhaustive-deps": "off", // Tắt cảnh báo liên quan đến dependencies trong hooks React
+    "@next/next/no-img-element": "off", // Tắt cảnh báo về việc sử dụng thẻ <img> trong Next.js
+    "@next/next/next-script-for-ga": "off", // Tắt cảnh báo về việc sử dụng <Script> cho Google Analytics trong Next.js
+    "no-unused-vars": "off", // Cảnh báo khi có biến không sử dụng
+    "no-unused-expressions": "warn", // Cảnh báo khi có biểu thức không sử dụng
+    "no-useless-return": "warn", // Cảnh báo khi có return không cần thiết
+    "unused-imports/no-unused-imports": "warn", // Cảnh báo khi có import không sử dụng
+    "@typescript-eslint/no-explicit-any": "off", // Tắt cảnh báo về việc sử dụng kiểu any trong TypeScript
+    "react/react-in-jsx-scope": "off", // Tắt cảnh báo về việc thiếu React trong phạm vi của JSX
+    "@typescript-eslint/no-require-imports": "off", // Tắt cảnh báo về việc sử dụng require() trong TypeScript
+    "unused-imports/no-unused-vars": [
+      "warn",
+      {
+        "vars": "all",
+        "args": "after-used",
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ]
+  }
 }

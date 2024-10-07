@@ -32,7 +32,7 @@ async function refreshAccessToken(token: JWT) {
       throw refreshedTokens;
     }
 
-    let result: any = {
+    const result: any = {
       ...token,
       accessToken: refreshedTokens.data.access_token,
       accessTokenExpired: Date.now() + refreshedTokens.data.expires_in * 1000,
@@ -43,6 +43,7 @@ async function refreshAccessToken(token: JWT) {
     delete result?.error;
     return result;
   } catch (error) {
+    console.log(error);
     return {
       ...token,
       error: "RefreshAccessTokenError",

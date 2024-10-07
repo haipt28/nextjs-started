@@ -1,14 +1,11 @@
 import { keyCloakApi } from "@/api-client/keycloak";
 import { signIn, signOut, useSession } from "next-auth/react";
 
-export interface IComponentsPageProps {}
-
-export default function ComponentsPage(props: IComponentsPageProps) {
+export default function ComponentsPage() {
   const session: any = useSession();
   const userData = session.data?.user;
 
   const getUser = async () => {
-    // await mockApi.getAlluser();
     try {
       await keyCloakApi.getProfile();
     } catch (error) {

@@ -1,10 +1,9 @@
+import { axiosInterceptors } from "@/utils";
 import axios, {
   AxiosError,
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios";
-import moment from "moment";
-import { getSession } from "next-auth/react";
 
 const axiosKeycloak = axios.create({
   baseURL: "/keycloak/",
@@ -12,22 +11,7 @@ const axiosKeycloak = axios.create({
 
 axiosKeycloak.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
-    const session: any = await getSession();
-    console.log("session", session);
-
-    if (session?.error === "RefreshAccessTokenError" && window) {
-      const url = process.env.NEXT_PUBLIC_DOMAIN + "/api/auth/signin";
-      window.location.replace(url);
-    }
-
-    if (session) {
-      const { accessToken } = session;
-
-      if (accessToken) {
-        config.headers.Authorization = "Bearer " + accessToken;
-      }
-    }
-    return config;
+    return axiosInterceptors(config);
   },
   (err: AxiosError) => {
     console.log("Error status: ", err.status);
